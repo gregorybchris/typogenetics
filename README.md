@@ -1,8 +1,12 @@
 # Typogenetics
 
-Implementation of the artificial evolutionary system described in Douglas Hofstadter's Gödel, Escher, Bach.
+Implementation of the artificial evolutionary system described in Douglas Hofstadter's Gödel, Escher, Bach. Typogenetics
 
 For a full spec see [notes.md](notes.md)
+
+## Requirements
+
+- [Poetry](https://python-poetry.org/)
 
 ## Installation
 
@@ -13,7 +17,7 @@ poetry install
 ## Usage
 
 ```bash
-typo run
+typo run CGATACTAAACCGA
 ```
 
 ## Resources
