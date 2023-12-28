@@ -1,4 +1,6 @@
-from typogenetics.lib.main import AminoAcid, Base, Enzyme, Folder, Orientation, Strand, Translator
+import pytest
+
+from typogenetics.lib.main import AminoAcid, Base, Binder, Enzyme, Folder, Orientation, Rewriter, Strand, Translator
 
 
 class TestTypogenetics:
@@ -32,4 +34,21 @@ class TestTypogenetics:
 
     def test_folder(self) -> None:
         enzyme = Enzyme([AminoAcid.COP, AminoAcid.INA, AminoAcid.RPY, AminoAcid.OFF])
-        assert Folder.fold(enzyme.amino_acids) == Orientation.D
+        assert Folder.fold(enzyme) == Orientation.D
+
+    def test_binder(self) -> None:
+        enzyme = Enzyme([AminoAcid.COP, AminoAcid.INA, AminoAcid.RPY, AminoAcid.OFF])
+        strand = Strand.from_str("CG GA TA CT AA AC CG A")
+        orientation = Folder.fold(enzyme)
+        assert orientation == Orientation.D
+        binding_affinity = Binder.get_binding_affinity(orientation)
+        assert Binder.get_binding_site(binding_affinity, strand) == 1
+
+    @pytest.mark.xfail(reason="Instructions not implemented")
+    def test_rewriter(self) -> None:
+        enzyme = Enzyme([AminoAcid.COP, AminoAcid.INA, AminoAcid.RPY, AminoAcid.OFF])
+        strand = Strand.from_str("CG GA TA CT AA AC CG A")
+        new_strands = Rewriter.rewrite(enzyme, strand)
+        assert new_strands == [
+            Strand.from_str("CG"),
+        ]

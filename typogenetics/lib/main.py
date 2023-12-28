@@ -1,7 +1,7 @@
 import logging
 from dataclasses import dataclass
 from enum import StrEnum, auto
-from typing import Iterator, List, Optional, Tuple
+from typing import Iterator, List, Optional, Tuple, Type
 
 logger = logging.getLogger(__name__)
 
@@ -217,9 +217,9 @@ class Folder:
     """
 
     @classmethod
-    def fold(cls, amino_acids: List[AminoAcid]) -> Orientation:
+    def fold(cls, enzyme: Enzyme) -> Orientation:
         turning_number = 0
-        for amino_acid in amino_acids:
+        for amino_acid in enzyme.iter_amino_acids():
             turn = cls._get_turn(amino_acid)
             turning_number += turn.to_int()
         return Orientation.from_turning_number(turning_number)
@@ -242,4 +242,187 @@ class Folder:
             AminoAcid.RPU: Turn.L,
             AminoAcid.LPY: Turn.L,
             AminoAcid.LPU: Turn.L,
+        }[amino_acid]
+
+
+@dataclass
+class RewriterState:
+    """Result of instruction application."""
+
+    strand: Strand
+    # TODO: Update
+    complement: Strand
+    unit: int
+
+    def get_strands(self) -> List[Strand]:
+        # TODO: Update
+        return [self.strand, self.complement]
+
+
+@dataclass
+class Inst:
+    """Base class for instructions."""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Cut(Inst):
+    """Cut strand(s)"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Del(Inst):
+    """Delete a base from strand"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Swi(Inst):
+    """Switch enzyme to other strand"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Mvr(Inst):
+    """Move one unit to the right"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Mvl(Inst):
+    """Move one unit to the left"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Cop(Inst):
+    """Turn on Copy mode"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Off(Inst):
+    """Turn off Copy mode"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Ina(Inst):
+    """Insert A to the right of this unit"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Inc(Inst):
+    """Insert C to the right of this unit"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Ing(Inst):
+    """Insert G to the right of this unit"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Int(Inst):
+    """Insert T to the right of this unit"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Rpy(Inst):
+    """Search for the nearest pyrimidine to the right"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Rpu(Inst):
+    """Search for the nearest purine to the right"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Lpy(Inst):
+    """Search for the nearest pyrimidine to the left"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Lpu(Inst):
+    """Search for the nearest purine to the left"""
+
+    def __call__(self, state: RewriterState) -> RewriterState:
+        raise NotImplementedError()
+
+
+class Binder:
+    @classmethod
+    def get_binding_site(cls, binding_affinity: Base, strand: Strand) -> Optional[int]:
+        for unit, base in enumerate(strand.iter_bases()):
+            if base == binding_affinity:
+                return unit
+        return None
+
+    @classmethod
+    def get_binding_affinity(cls, orientation: Orientation) -> Base:
+        return {
+            Orientation.R: Base.A,
+            Orientation.U: Base.C,
+            Orientation.D: Base.G,
+            Orientation.L: Base.T,
+        }[orientation]
+
+
+class Rewriter:
+    @classmethod
+    def rewrite(cls, enzyme: Enzyme, strand: Strand) -> List[Strand]:
+        orientation = Folder.fold(enzyme)
+        binding_affinity = Binder.get_binding_affinity(orientation)
+        unit = Binder.get_binding_site(binding_affinity, strand)
+        if unit is None:
+            return []
+
+        # TODO: Fix this to not have two of the same strand
+        state = RewriterState(strand, strand, unit)
+        for amino_acid in enzyme.iter_amino_acids():
+            inst_class = cls._get_instruction_class(amino_acid)
+            inst = inst_class()
+            state = inst(state)
+        return state.get_strands()
+
+    @classmethod
+    def _get_instruction_class(cls, amino_acid: AminoAcid) -> Type[Inst]:
+        return {
+            AminoAcid.CUT: Cut,
+            AminoAcid.DEL: Del,
+            AminoAcid.SWI: Swi,
+            AminoAcid.MVR: Mvr,
+            AminoAcid.MVL: Mvl,
+            AminoAcid.COP: Cop,
+            AminoAcid.OFF: Off,
+            AminoAcid.INA: Ina,
+            AminoAcid.INC: Inc,
+            AminoAcid.ING: Ing,
+            AminoAcid.INT: Int,
+            AminoAcid.RPY: Rpy,
+            AminoAcid.RPU: Rpu,
+            AminoAcid.LPY: Lpy,
+            AminoAcid.LPU: Lpu,
         }[amino_acid]
