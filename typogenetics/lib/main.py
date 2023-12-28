@@ -73,14 +73,14 @@ class Strand:
         yield from self.bases
 
     def iter_duplets(self) -> Iterator[Duplet]:
-        idx = 0
+        unit = 0
         while True:
-            if idx + 1 >= len(self):
+            if unit + 1 >= len(self):
                 break
 
-            yield (self[idx], self[idx + 1])
+            yield (self[unit], self[unit + 1])
 
-            idx += 2
+            unit += 2
 
     def __repr__(self) -> str:
         return "".join([str(b) for b in self.bases])
@@ -88,8 +88,8 @@ class Strand:
     def __str__(self) -> str:
         return self.__repr__()
 
-    def __getitem__(self, index: int) -> Base:
-        return self.bases[index]
+    def __getitem__(self, unit: int) -> Base:
+        return self.bases[unit]
 
     def __len__(self) -> int:
         return len(self.bases)
@@ -98,6 +98,9 @@ class Strand:
 @dataclass
 class Enzyme:
     amino_acids: List[AminoAcid]
+
+    def iter_amino_acids(self) -> Iterator[AminoAcid]:
+        yield from self.amino_acids
 
     def __repr__(self) -> str:
         return "-".join([str(b) for b in self.amino_acids])
