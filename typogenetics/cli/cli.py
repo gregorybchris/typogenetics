@@ -2,7 +2,7 @@ import logging
 
 import click
 
-from typogenetics.lib.main import Strand, Translator
+from typogenetics.lib.main import Folder, Strand, Translator
 
 logger = logging.getLogger(__name__)
 
@@ -27,3 +27,5 @@ def run_command(
     enzymes = Translator.translate(strand)
     for enzyme in enzymes:
         print(enzyme)
+        orientation = Folder.fold(enzyme.amino_acids)
+        print(orientation)

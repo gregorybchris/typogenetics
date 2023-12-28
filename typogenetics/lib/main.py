@@ -161,3 +161,82 @@ class Translator:
             (Base.T, Base.G): AminoAcid.LPY,
             (Base.T, Base.T): AminoAcid.LPU,
         }[duplet]
+
+
+class Orientation(StrEnum):
+    U = auto()
+    D = auto()
+    L = auto()
+    R = auto()
+
+    @classmethod
+    def from_turning_number(cls, turning_number: int) -> "Orientation":
+        return {
+            0: cls.R,
+            1: cls.D,
+            2: cls.L,
+            3: cls.U,
+        }[turning_number % 4]
+
+
+class Turn(StrEnum):
+    L = auto()
+    S = auto()
+    R = auto()
+
+    def to_int(self) -> int:
+        return {
+            Turn.L: -1,
+            Turn.S: 0,
+            Turn.R: 1,
+        }[self]
+
+
+class Folder:
+    """
+    | ins | dir |
+    | --- | --- |
+    | cut | s   |
+    | del | s   |
+    | swi | r   |
+    | mvr | s   |
+    | mvl | s   |
+    | cop | r   |
+    | off | l   |
+    | ina | s   |
+    | inc | r   |
+    | ing | r   |
+    | int | l   |
+    | rpy | r   |
+    | rpu | l   |
+    | lpy | l   |
+    | lpu | l   |
+    """
+
+    @classmethod
+    def fold(cls, amino_acids: List[AminoAcid]) -> Orientation:
+        turning_number = 0
+        for amino_acid in amino_acids:
+            turn = cls._get_turn(amino_acid)
+            turning_number += turn.to_int()
+        return Orientation.from_turning_number(turning_number)
+
+    @classmethod
+    def _get_turn(cls, amino_acid: AminoAcid) -> Turn:
+        return {
+            AminoAcid.CUT: Turn.S,
+            AminoAcid.DEL: Turn.S,
+            AminoAcid.SWI: Turn.R,
+            AminoAcid.MVR: Turn.S,
+            AminoAcid.MVL: Turn.S,
+            AminoAcid.COP: Turn.R,
+            AminoAcid.OFF: Turn.L,
+            AminoAcid.INA: Turn.S,
+            AminoAcid.INC: Turn.R,
+            AminoAcid.ING: Turn.R,
+            AminoAcid.INT: Turn.L,
+            AminoAcid.RPY: Turn.R,
+            AminoAcid.RPU: Turn.L,
+            AminoAcid.LPY: Turn.L,
+            AminoAcid.LPU: Turn.L,
+        }[amino_acid]
