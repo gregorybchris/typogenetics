@@ -27,5 +27,5 @@ def run_command(
     enzymes = Translator.translate(strand)
     for enzyme in enzymes:
         print(enzyme)
-        orientation = Folder.fold(enzyme.amino_acids)
+        orientation = Folder.fold(enzyme)
         print(orientation)
