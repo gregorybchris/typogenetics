@@ -348,12 +348,13 @@ class Rewriter:
                 strands += cls.strands_from_pairs(cut_pairs)
                 pairs = pairs[: unit + 1]
             elif amino_acid == AminoAcid.DEL:
-                # TODO: Only delete from the strand the enzyme is bound to
-                pairs.pop(unit)
-                if len(pairs) == 0:
-                    logger.debug("Strand is empty now")
-                    break
+                pairs[unit].bind = None
                 unit -= 1
+                # NOTE: It's not clear from the specification which direction we should move
+                # after a deletion, we here we choose left arbitrarily.
+                if unit < 0:
+                    logger.debug("Reached end of strand")
+                    break
             elif amino_acid == AminoAcid.SWI:
                 if pairs[unit].comp is None:
                     logger.debug("Tried to switch to empty base pair complement")
