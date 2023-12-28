@@ -329,10 +329,12 @@ class Rewriter:
         copy_mode = False
 
         unit = Folder.get_binding_site(enzyme, strand)
+        logger.info(f"Rewriting strand {strand} with enzyme {enzyme}, unit={unit}")
         if unit is None:
             return [strand]
 
         pairs = [BasePair(base, None) for base in strand.iter_bases()]
+
         logger.debug(f"Init @ {unit}, copy={copy_mode}")
         logger.debug(cls.pairs_to_string(pairs))
 
@@ -348,15 +350,27 @@ class Rewriter:
             elif amino_acid == AminoAcid.DEL:
                 # TODO: Only delete from the strand the enzyme is bound to
                 pairs.pop(unit)
+                if len(pairs) == 0:
+                    logger.debug("Strand is empty now")
+                    break
+                unit -= 1
             elif amino_acid == AminoAcid.SWI:
+                if pairs[unit].comp is None:
+                    logger.debug("Tried to switch to empty base pair complement")
+                    break
                 for pair in pairs:
                     pair.swap()
                 pairs = pairs[::1]
             elif amino_acid in [AminoAcid.MVR, AminoAcid.MVL]:
                 unit += cls.amino_acid_to_direction(amino_acid)
+                if unit < 0 or unit >= len(pairs):
+                    logger.debug("Reached end of strand")
+                    break
+                if pairs[unit].bind is None:
+                    logger.debug("Reached end of strand")
+                    break
                 if copy_mode:
                     pairs[unit].add_comp()
-                # TODO: Check here that we're not off the end
             elif amino_acid == AminoAcid.COP:
                 copy_mode = True
                 pair = pairs[unit]
@@ -369,17 +383,24 @@ class Rewriter:
                 comp = bind.get_complement() if copy_mode else None
                 pairs.insert(unit + 1, BasePair(bind, comp))
             elif amino_acid in [AminoAcid.RPY, AminoAcid.RPU, AminoAcid.LPY, AminoAcid.LPU]:
+                end_of_strand = False
                 while True:
                     unit += cls.amino_acid_to_direction(amino_acid)
+                    if unit < 0 or unit >= len(pairs):
+                        end_of_strand = True
+                        break
                     pair = pairs[unit]
                     bind_base = pair.bind
                     if bind_base is None:
-                        # TODO: Check here that we're not off the end
+                        end_of_strand = True
                         break
                     if copy_mode:
                         pair.add_comp()
                     if bind_base.is_type(cls.amino_acid_to_base_type(amino_acid)):
                         break
+                if end_of_strand:
+                    logger.debug("Reached end of strand")
+                    break
 
             logger.debug(cls.pairs_to_string(pairs))
 
@@ -443,18 +464,18 @@ class Rewriter:
 
     @classmethod
     def pairs_to_string(cls, pairs: List[BasePair]) -> str:
-        res = ""
+        res = "[ "
         comp_map = {Base.A: "∀", Base.C: "Ↄ", Base.G: "⅁", Base.T: "⊥"}
         for pair in pairs:
             if pair.comp is None:
                 res += "  "
             else:
                 res += str(comp_map[pair.comp]) + " "
-        res += "\n"
+        res += "]\n[ "
         for pair in pairs:
             if pair.bind is None:
                 res += "  "
             else:
                 res += str(pair.bind) + " "
-        res += "\n"
+        res += "]"
         return res
