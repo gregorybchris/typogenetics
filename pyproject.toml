@@ -1,0 +1,67 @@
+[tool.poetry]
+authors = ["Chris Gregory <christopher.b.gregory@gmail.com>"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+description = "Artificial genetics simulation."
+keywords = ["artificial", "genetics", "simulation"]
+license = "Apache Software License"
+name = "typogenetics"
+readme = "README.md"
+repository = "https://github.com/gregorybchris/typogenetics"
+version = "0.1.0"
+
+[[tool.poetry.packages]]
+include = "typogenetics"
+
+[tool.poetry.dependencies]
+click = "^8.1.7"
+python = ">=3.9"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.12.1"
+mypy = "^1.8.0"
+pylint = "^3.0.3"
+
+[tool.poetry.scripts]
+typo = "typogenetics.cli.cli:main"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+line_length = 120
+profile = "black"
+src_paths = "*"
+
+[tool.mypy]
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pylint.basic]
+good-names = ["f", "i"]
+notes = ["FIXME"]
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-function-docstring",
+    "missing-module-docstring",
+    "missing-class-docstring",
+]
+
+[tool.pylint.reports]
+output-format = "colorized"
