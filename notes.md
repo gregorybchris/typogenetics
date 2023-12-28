@@ -4,23 +4,23 @@
 
 Definitions of terms as defined in Typogenetics.
 
-| term                       | definition                                                                             |
-| -------------------------- | -------------------------------------------------------------------------------------- |
-| bases                      | C, G, T, A                                                                             |
-| strands                    | string of bases                                                                        |
-| unit                       | position within a strand                                                               |
-| enzymes                    | operate on strands one unit at a time                                                  |
-| purines                    | A and G                                                                                |
-| pyrimidines                | C and T                                                                                |
-| complementary base pairing | when a strand is copied pyrimidines turn into purines and vice versa, A <-> T, C <-> G |
-| instruction                | an operation performed by an enzyme                                                    |
-| amino acid                 | three letter abbreviation for an instruction performed by an enzyme                    |
-| duplet                     | an adjacent pair of bases                                                              |
-| translation                | mapping from duplets to instructions                                                   |
-| primary structure          | amino acid sequence                                                                    |
-| tertiary structure         | folded structure of an enzyme                                                          |
-| gene                       | a portion of a strand that codes for a single enzyme                                   |
-| ribosome                   | reads strands and produces enzymes                                                     |
+| term                       | definition                                                              |
+| -------------------------- | ----------------------------------------------------------------------- |
+| bases                      | C, G, T, A                                                              |
+| strand                     | string of bases                                                         |
+| unit                       | position within a strand                                                |
+| purines                    | A and G                                                                 |
+| pyrimidines                | C and T                                                                 |
+| complementary base pairing | when a strand is copied pyrimidines swap with purines, A <-> T, C <-> G |
+| enzymes                    | operate on strands one unit at a time                                   |
+| instruction                | an operation performed by an enzyme                                     |
+| amino acid                 | three letter abbreviation for an instruction performed by an enzyme     |
+| duplet                     | an adjacent pair of bases                                               |
+| translation                | mapping from duplets to instructions                                    |
+| primary structure          | amino acid sequence                                                     |
+| tertiary structure         | folded structure of an enzyme                                           |
+| gene                       | a portion of a strand that codes for a single enzyme                    |
+| ribosome                   | reads strands and produces enzymes                                      |
 
 ## Instructions
 
@@ -42,8 +42,8 @@ Definitions of terms as defined in Typogenetics.
 | lpy | search for the nearest pyrimidine to the left  |
 | lpu | search for the nearest purine to the left      |
 
-- `cut` pertains to both strands.
-- `delete` pertains to only the strand on which the enzyme is working.
+- `cut` applies to both strands.
+- `delete` applies to only the strand on which the enzyme is working.
 - `switch` moves the enzyme to the attached strand above the current strand. if there is no complementary base where the enzyme is currently bound, then the enzyme just detaches itself.
 - `insert` will insert into both strands if Copy mode is on (with the complement inserted into the other strand). if Copy mode is off then a blank space is left in the complementary strand.
 - if `copy` mode is on and `move` or `search` instructions are encountered, then complementary bases should be manufactured everywhere the current strand slides.
@@ -111,3 +111,9 @@ Typically about 300 amino acids make up a complete protein. Strands of DNA can b
 Three consecutive bases/nucleotides form a "codon". Since there are 4 bases and each codon has 3 bases, the number of possible codons is 4x4x4 = 64. Seeing as there are 20 amino acids, multiple codons will map to a single amino acid.
 
 Finally, in real biology there is no 1:1 relationship between an amino acid and some operation. The tertiary structure of a protein decides the function of the protein. It is the full context of the protein that determines how any one amino acid will function.
+
+## Next Steps
+
+Using a codon of more bases allows one strand to code for multiple proteins depending on the binding site. Increasing the codon size to 4 bases could increase the density of genes on a given strand. The instruction set can stay the same and contain redundancy as in actual biology.
+
+Adding a third category of bases could potentially give the system more expressive power.

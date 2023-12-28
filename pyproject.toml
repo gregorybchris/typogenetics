@@ -62,6 +62,7 @@ disable = [
     "missing-function-docstring",
     "missing-module-docstring",
     "missing-class-docstring",
+    "logging-fstring-interpolation",
 ]
 
 [tool.pylint.reports]

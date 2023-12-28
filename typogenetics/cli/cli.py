@@ -2,7 +2,7 @@ import logging
 
 import click
 
-from typogenetics.lib.main import Folder, Strand, Translator
+from typogenetics.lib.typogenetics import Rewriter, Strand, Translator
 
 logger = logging.getLogger(__name__)
 
@@ -19,13 +19,16 @@ def run_command(
     n_translations: int,
     debug: bool,
 ) -> None:
+    log_level = logging.INFO
+    if debug:
+        log_level = logging.DEBUG
+    logging.basicConfig(level=log_level, format="%(message)s")
+
     print("n_translations", n_translations)
 
     strand = Strand.from_str("CG GA TA CT AA AC CG A")
-    # [cop, ina, rpy, off] and [cut, cop]
-    print(strand)
     enzymes = Translator.translate(strand)
-    for enzyme in enzymes:
-        print(enzyme)
-        orientation = Folder.fold(enzyme)
-        print(orientation)
+    # [cop, ina, rpy, off] and [cut, cop]
+    enzyme = enzymes[0]
+    logger.debug(f"Rewriting strand {strand} with enzyme {enzyme}")
+    Rewriter.rewrite(enzyme, strand)

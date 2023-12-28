@@ -2,6 +2,8 @@
 
 Implementation of the artificial evolutionary system described in Douglas Hofstadter's Gödel, Escher, Bach.
 
+For a full spec see [notes.md](notes.md)
+
 ## Installation
 
 ```bash
