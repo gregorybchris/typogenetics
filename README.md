@@ -17,7 +17,14 @@ poetry install
 ## Usage
 
 ```bash
-typo run CGATAGACATAGGATAATG
+# Translate a single strand into an enzyme
+typo translate ATAGAGAGATCACATGTACGATAC
+
+# Apply an enzyme to a strand to produce a set of new strands
+typo rewrite cop-mvl-mvr-swi-cut-rpy AATACTAAACCGA
+
+# Simulate many generations of evolution with a starting strand
+typo run CGATAGACATAGGATAATG --iter 100000 --seed 42
 ```
 
 ## Resources
