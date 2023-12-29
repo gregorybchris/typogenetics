@@ -120,6 +120,14 @@ class Enzyme:
     def iter_amino_acids(self) -> Iterator[AminoAcid]:
         yield from self.amino_acids
 
+    @classmethod
+    def from_str(cls, enzyme_str: str) -> "Enzyme":
+        amino_acids = []
+        for amino_acid_str in enzyme_str.split("-"):
+            amino_acid = AminoAcid(amino_acid_str)
+            amino_acids.append(amino_acid)
+        return cls(amino_acids)
+
     def __repr__(self) -> str:
         return "-".join([str(b) for b in self.amino_acids])
 
