@@ -1,6 +1,4 @@
-import logging
-
-from typogenetics.lib.typogenetics import AminoAcid, Base, Enzyme, Folder, Orientation, Rewriter, Strand, Translator
+from typogenetics.lib.typogenetics import Base, Enzyme, Folder, Orientation, Rewriter, Strand, Translator
 
 
 class TestTypogenetics:
