@@ -55,13 +55,13 @@ def rewrite_command(
 
 
 @main.command(name="simulate")
-@click.argument("init_strand", type=str)
+@click.argument("init-strand-str", type=str)
 @click.option("--iter", "n_iterations", type=int, default=100_000)
 @click.option("--seed", "random_seed", type=int, default=None)
 @click.option("--debug", type=bool, is_flag=True)
 @click.option("--print-strands", type=bool, is_flag=True)
 def simulate_command(
-    init_strand: str,
+    init_strand_str: str,
     n_iterations: int,
     random_seed: Optional[int] = None,
     debug: bool = False,
@@ -70,7 +70,9 @@ def simulate_command(
     set_logging_config(debug)
 
     random.seed(random_seed)
-    strands = [Strand.from_str(init_strand)]
+    init_strand = Strand.from_str(init_strand_str)
+    strands = [init_strand]
+    known_set = set([str(init_strand)])
     for _ in range(n_iterations):
         enzyme_strand = strands[random.randint(0, len(strands) - 1)]
         enzymes = Translator.translate(enzyme_strand)
@@ -79,16 +81,15 @@ def simulate_command(
         enzyme = enzymes[random.randint(0, len(enzymes) - 1)]
         rewrite_strand = strands[random.randint(0, len(strands) - 1)]
         new_strands = Rewriter.rewrite(enzyme, rewrite_strand)
-        strands.extend(new_strands)
-
-    unique_strands = set()
-    for strand in strands:
-        unique_strands.add(str(strand))
+        for strand in new_strands:
+            if str(strand) not in known_set:
+                strands.append(strand)
+            known_set.add(str(strand))
 
     if print_strands:
         print("Unique strands:")
-        sorted_strands = sorted(unique_strands)
+        sorted_strands = sorted(known_set)
         for strand_str in sorted_strands:
             print(f"- {strand_str}")
 
-    print(f"Discovered {len(unique_strands)} unique strands while simulating for {n_iterations} iterations")
+    print(f"Discovered {len(known_set)} unique strands while simulating for {n_iterations} iterations")
