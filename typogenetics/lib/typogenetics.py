@@ -158,11 +158,11 @@ class Translator:
         amino_acids: List[AminoAcid] = []
         for duplet in strand.iter_duplets():
             amino_acid = cls._translate_duplet(duplet)
-            if amino_acid is None:
+            if amino_acid is None and len(amino_acids) > 0:
                 enzyme = Enzyme(amino_acids)
                 enzymes.append(enzyme)
                 amino_acids = []
-            else:
+            elif amino_acid is not None:
                 amino_acids.append(amino_acid)
 
         if len(amino_acids) > 0:

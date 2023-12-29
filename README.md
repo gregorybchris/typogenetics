@@ -17,7 +17,7 @@ poetry install
 ## Usage
 
 ```bash
-typo run CGATACTAAACCGA
+typo run CGATAGACATAGGATAATG
 ```
 
 ## Resources
