@@ -43,10 +43,10 @@ Definitions of terms as defined in Typogenetics.
 | lpu | search for the nearest purine to the left      |
 
 - `cut` applies to both strands.
-- `delete` applies to only the strand on which the enzyme is working.
-- `switch` moves the enzyme to the attached strand above the current strand. if there is no complementary base where the enzyme is currently bound, then the enzyme just detaches itself.
-- `insert` will insert into both strands if Copy mode is on (with the complement inserted into the other strand). if Copy mode is off then a blank space is left in the complementary strand.
-- if `copy` mode is on and `move` or `search` instructions are encountered, then complementary bases should be manufactured everywhere the current strand slides.
+- `del` applies to only the strand on which the enzyme is working.
+- `swi` moves the enzyme to the attached strand above the current strand. if there is no complementary base where the enzyme is currently bound, then the enzyme just detaches itself.
+- insertion instructions will insert into both strands if Copy mode is on (with the complement inserted into the other strand). if Copy mode is off then a blank space is left in the complementary strand.
+- if Copy mode is on and move or search instructions are encountered, then complementary bases should be manufactured everywhere the current strand slides.
 
 ## Translation
 
