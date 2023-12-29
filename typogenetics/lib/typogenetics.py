@@ -361,7 +361,8 @@ class Rewriter:
                     break
                 for pair in pairs:
                     pair.swap()
-                pairs = pairs[::1]
+                pairs = pairs[::-1]
+                unit = len(pairs) - unit - 1
             elif amino_acid in [AminoAcid.MVR, AminoAcid.MVL]:
                 unit += cls.amino_acid_to_direction(amino_acid)
                 if unit < 0 or unit >= len(pairs):
