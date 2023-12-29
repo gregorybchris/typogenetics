@@ -24,7 +24,7 @@ typo translate ATAGAGAGATCACATGTACGATAC
 typo rewrite cop-mvl-mvr-swi-cut-rpy AATACTAAACCGA
 
 # Simulate many generations of evolution with a starting strand
-typo run CGATAGACATAGGATAATG --iter 100000 --seed 42
+typo simulate CGATAGACATAGGATAATG --iter 100000 --seed 42
 ```
 
 ## Resources

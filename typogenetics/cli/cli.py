@@ -54,13 +54,13 @@ def rewrite_command(
         print(f"- {new_strand}")
 
 
-@main.command(name="run")
+@main.command(name="simulate")
 @click.argument("init_strand", type=str)
 @click.option("--iter", "n_iterations", type=int, default=100_000)
 @click.option("--seed", "random_seed", type=int, default=None)
 @click.option("--debug", type=bool, is_flag=True)
 @click.option("--print-strands", type=bool, is_flag=True)
-def run_command(
+def simulate_command(
     init_strand: str,
     n_iterations: int,
     random_seed: Optional[int] = None,
