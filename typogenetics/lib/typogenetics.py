@@ -363,6 +363,9 @@ class Rewriter:
                 if unit < 0:
                     logger.debug("Reached end of strand")
                     break
+                if pairs[unit].bind is None:
+                    logger.debug("Reached end of strand")
+                    break
             elif amino_acid == AminoAcid.SWI:
                 if pairs[unit].comp is None:
                     logger.debug("Tried to switch to empty base pair complement")
