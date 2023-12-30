@@ -8,7 +8,9 @@ Typogenetics (or "typographical genetics") is a toy version of real biological g
 
 **In biological terms**: Strands of bases are translated into sequences of amino acids. Amino acids are mapped to instructions. Instructions are applied to strands to produce new strands. This tangled hierarchy has the potential to enable the evolution of self-replicating enzymes.
 
-For the nitty gritty see [spec.md](spec.md)
+For the nitty gritty of the Typogenetics specification see [spec.md](spec.md)
+
+For some additional thoughts on ways to extend Typogenetics see [extensions.md](extensions.md)
 
 ## Requirements
 
