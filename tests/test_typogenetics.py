@@ -1,4 +1,4 @@
-from typogenetics.lib.typogenetics import Base, Enzyme, Folder, Orientation, Rewriter, Strand, Translator
+from typogenetics.typogenetics import Base, Enzyme, Folder, Orientation, Rewriter, Strand, Translator
 
 
 class TestTypogenetics:

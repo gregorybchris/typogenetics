@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 
-from typogenetics.lib.typogenetics import Enzyme, Rewriter, Strand, Translator
+from typogenetics.typogenetics import Enzyme, Rewriter, Strand, Translator
 
 logger = logging.getLogger(__name__)
 

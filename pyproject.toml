@@ -30,7 +30,7 @@ pylint = "^3.0.3"
 pytest = "^7.4.3"
 
 [tool.poetry.scripts]
-typo = "typogenetics.cli.cli:main"
+typo = "typogenetics.cli:main"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
