@@ -4,7 +4,7 @@ Implementation of the artificial evolutionary system described in Douglas Hofsta
 
 Strands of bases are translated into sequences of amino acids. Amino acids are mapped to instructions. Instructions are applied to strands to produce new strands. This tangled hierarchy has the potential to enable the evolution of self-replicating enzymes.
 
-For a full spec see [notes.md](notes.md)
+For more details see [spec.md](spec.md)
 
 ## Requirements
 

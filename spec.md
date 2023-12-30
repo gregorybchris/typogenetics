@@ -1,8 +1,8 @@
-# Notes
+# Typogenetics Specification
 
 ## Terminology
 
-Definitions of terms as defined in Typogenetics.
+Definitions of terms as defined in Typogenetics:
 
 | term                       | definition                                                              |
 | -------------------------- | ----------------------------------------------------------------------- |
@@ -24,6 +24,8 @@ Definitions of terms as defined in Typogenetics.
 
 ## Instructions
 
+Instructions as described in Gödel, Escher, Bach:
+
 | ins | action                                         |
 | --- | ---------------------------------------------- |
 | cut | cut strand(s)                                  |
@@ -42,6 +44,8 @@ Definitions of terms as defined in Typogenetics.
 | lpy | search for the nearest pyrimidine to the left  |
 | lpu | search for the nearest purine to the left      |
 
+There are also some clarifications offered that preemptively address ambiguities that may have otherwise arisen:
+
 - `cut` applies to both strands.
 - `del` applies to only the strand on which the enzyme is working.
 - `swi` moves the enzyme to the attached strand above the current strand. if there is no complementary base where the enzyme is currently bound, then the enzyme just detaches itself.
@@ -59,11 +63,11 @@ The first base from each duplet is on the y-axis and the second base is on the x
 | G   | ina | inc | ing | int |
 | T   | rpy | rpu | lpy | lpu |
 
-Note that the AA duplet does not code for an amino acid. It is reserved as a "punctuation mark" to mean end of enzyme. Multiple amino acid sequences can be created from a single strand during translation.
+> Note: The AA duplet does not code for an amino acid. It is reserved as a "punctuation mark" to mean end of enzyme. Multiple amino acid sequences can be created from a single strand during translation.
 
 ## Folding
 
-Each amino acid has the possibility of inducing a kink in the enzyme. r indicates a right turn in the enzyme, l indicates a left, and s indicates no kind induced and the enzyme remains straight at that amino acid.
+Each amino acid has the possibility of inducing a kink in the enzyme. "r" indicates a right turn in the enzyme, "l" indicates a left turn, and "s" indicates no turn induced and the enzyme remains straight at that amino acid.
 
 | ins | dir |
 | --- | --- |
@@ -96,13 +100,13 @@ Holding the orientation of the first segment to the right, the orientation of th
 | R     | D    | G    |
 | R     | L    | T    |
 
-## Analogy to Real Biology
+## Limitations to the Analogy
 
 DNA chains are made up of nucleotides. Each nucleotide is made up of 1. a phosphate group, 2. a ribose sugar, and 3. a base. In Typogenetics we drop the first two components of a nucleotide and our strands are just composed of bases.
 
 Enzymes are one type of protein. All proteins in Typogenetics can actively operate on strands, so we just refer to all proteins in Typogenetics as enzymes.
 
-Transcription is the process of turning DNA into mRNA, which is then read by ribosomes to create proteins through the process of translation. In Typogenetics we skip this step and our program (the player of the TNT game) does the job of a ribosome, creating enzymes without any machinery built from genetic code.
+Transcription is the process of turning DNA into mRNA, which is then read by ribosomes to create proteins through the process of translation. In Typogenetics we skip this step and our program (the player of the Typogenetics game) does the job of a ribosome, creating enzymes without any machinery built from genetic code.
 
 Proteins are actually made up of 20 distinct amino acids, compared to the 15 in Typogenetics.
 
@@ -114,6 +118,18 @@ Finally, in real biology there is no 1:1 relationship between an amino acid and 
 
 ## Next Steps
 
-Using a codon of more bases allows one strand to code for multiple proteins depending on the binding site. Increasing the codon size to 4 bases could increase the density of genes on a given strand. The instruction set can stay the same and contain redundancy as in actual biology.
+### Larger codon size
 
-Adding a third category of bases could potentially give the system more expressive power.
+If a codon is comprised of two nucleotides, then a single base can be translated into two different amino acids depending on the initial binding site. A codon of three nucleotides allows for three distinct meanings that a single base takes on, effectively increasing the density of genes without increasing the length of a strand. There may be a very good reason living systems on Earth use a codon of size three. I would be interested to explore the effects of codons of size 4, 5, 6. The size of the instruction set need not increase to accommodate an increased number of possible codons. Just as in real biology, a large diversity of nucleotide combinations can be mapped to a smaller set of amino acids with redundancy built in. Would increasing the density of genetic information on a strand help us evolve complex systems faster?
+
+### More nucleobases
+
+In real biology we have pyrimidines and purines. I would be curious to add a third category of bases. If I had to guess, C, T, G, A is close to the only code that satisfies both requirements of simplicity and error correction. Simplicity is a requirement because anything more complex would have been vanishingly unlikely to evolve out of primordial metabolic networks. And error correction, of course, to ensure genetic code would be stable enough to propagate over time. However we could have had a true binary code. Which makes me wonder what the effect would be of a hexadecimal code. Does increasing the number of available nucleotides increase the expressive power?
+
+### Complex instruction set
+
+The instruction set of 15 amino acids that Hofstadter gives us is certainly not the simplest possible instruction set, though there's something very beautiful about it being as reduced as it is. One does wonder how powerful strand rewriting could be with a few more instructions. I also wonder if the conditional rules that come in the box are a bit too complex, even. We currently can scan left/right until reaching a pyrimidine/purine. These are are conditionals, but not as simple as "if purine, move left one unit". Perhaps conditionals that simple could facilitate the evolution of more stable enzymes even if the enzymes need to be longer to do anything useful.
+
+### Turing completeness
+
+While I have not found anything definitive about whether Typogenetics is Turing complete, I would not be surprised if it were proven to be Turing incomplete. While there is certainly the ability to write to a tape, the lack of a set of states for the machine to be in is a bit worrying. Endowing an enzyme with a small finite state machine could be an interesting way to increase its representational power.
