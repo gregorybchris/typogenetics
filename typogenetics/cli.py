@@ -30,7 +30,8 @@ def translate_command(
 ) -> None:
     set_logging_config(debug)
 
-    enzymes = Translator.translate(Strand.from_str(strand_str))
+    strand = Strand.from_str(strand_str)
+    enzymes = Translator.translate(strand)
     for enzyme in enzymes:
         print(enzyme)
 
