@@ -24,7 +24,7 @@ Definitions of terms as defined in Typogenetics:
 
 ## Instructions
 
-Instructions as described in Gödel, Escher, Bach:
+Instructions as described in "Gödel, Escher, Bach":
 
 | ins | action                                         |
 | --- | ---------------------------------------------- |

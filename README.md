@@ -1,6 +1,6 @@
 # Typogenetics
 
-Implementation of the artificial evolutionary system described in Douglas Hofstadter's Gödel, Escher, Bach.
+Implementation of the artificial evolutionary system described in Douglas Hofstadter's "Gödel, Escher, Bach".
 
 Strands of bases are translated into sequences of amino acids. Amino acids are mapped to instructions. Instructions are applied to strands to produce new strands. This tangled hierarchy has the potential to enable the evolution of self-replicating enzymes.
 
