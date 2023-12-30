@@ -2,9 +2,13 @@
 
 Implementation of the artificial evolutionary system described in Douglas Hofstadter's "Gödel, Escher, Bach".
 
-Strands of bases are translated into sequences of amino acids. Amino acids are mapped to instructions. Instructions are applied to strands to produce new strands. This tangled hierarchy has the potential to enable the evolution of self-replicating enzymes.
+Typogenetics (or "typographical genetics") is a toy version of real biological genetics. It simplifies a lot about how real genetics works to provide some useful intuitions with only a few moving parts.
 
-For more details see [spec.md](spec.md)
+**In computer terms**: You write a short program. The Typogenetics interpreter executes your program on some input you also provide and it produces some output. That output is guaranteed to be interpretable as another program. You can run that new program through the same interpreter. Given a good initial program, by running this execution in a loop we can hope to eventually produce a program that reproduces itself when interpreted.
+
+**In biological terms**: Strands of bases are translated into sequences of amino acids. Amino acids are mapped to instructions. Instructions are applied to strands to produce new strands. This tangled hierarchy has the potential to enable the evolution of self-replicating enzymes.
+
+For the nitty gritty see [spec.md](spec.md)
 
 ## Requirements
 
