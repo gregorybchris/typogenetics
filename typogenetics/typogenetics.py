@@ -351,7 +351,6 @@ class Rewriter:
             logger.debug(f"Applying {amino_acid} @ {unit}, copy={copy_mode}")
 
             if amino_acid == AminoAcid.CUT:
-                # TODO: Handle case where we cut at the very end of the strand
                 cut_pairs = pairs[unit + 1 :]
                 strands += cls.strands_from_pairs(cut_pairs)
                 pairs = pairs[: unit + 1]
