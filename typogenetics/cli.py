@@ -1,9 +1,10 @@
 import logging
-import random
 from typing import Optional
 
 import click
+import numpy as np
 
+from typogenetics.search import Search
 from typogenetics.typogenetics import Enzyme, Rewriter, Strand, Translator
 
 logger = logging.getLogger(__name__)
@@ -58,39 +59,45 @@ def rewrite_command(
 @main.command(name="simulate")
 @click.argument("init-strand-str", type=str)
 @click.option("--iter", "n_iterations", type=int, default=100_000)
-@click.option("--seed", "random_seed", type=int, default=None)
+@click.option("--seed", "random_state", type=int, default=None)
 @click.option("--debug", type=bool, is_flag=True)
 @click.option("--print-strands", type=bool, is_flag=True)
 def simulate_command(
     init_strand_str: str,
     n_iterations: int,
-    random_seed: Optional[int] = None,
+    random_state: Optional[int] = None,
     debug: bool = False,
     print_strands: bool = False,
 ) -> None:
     set_logging_config(debug)
 
-    random.seed(random_seed)
+    rng = np.random.default_rng(random_state)
     init_strand = Strand.from_str(init_strand_str)
-    strands = [init_strand]
-    known_set = set([str(init_strand)])
-    for _ in range(n_iterations):
-        enzyme_strand = strands[random.randint(0, len(strands) - 1)]
-        enzymes = Translator.translate(enzyme_strand)
-        if len(enzymes) == 0:
-            continue
-        enzyme = enzymes[random.randint(0, len(enzymes) - 1)]
-        rewrite_strand = strands[random.randint(0, len(strands) - 1)]
-        new_strands = Rewriter.rewrite(enzyme, rewrite_strand)
-        for strand in new_strands:
-            if str(strand) not in known_set:
-                strands.append(strand)
-            known_set.add(str(strand))
 
-    if print_strands:
-        print("Unique strands:")
-        sorted_strands = sorted(known_set)
-        for strand_str in sorted_strands:
-            print(f"- {strand_str}")
+    Search.random(init_strand, n_iterations, rng, print_strands=print_strands)
 
-    print(f"Discovered {len(known_set)} unique strands while simulating for {n_iterations} iterations")
+
+@main.command(name="search")
+@click.argument("init-strand-str", type=str)
+@click.argument("apply-strand-str", type=str)
+@click.option("--depth", "target_depth", type=int, default=10)
+@click.option("--edits", "n_edits", type=int, default=10)
+@click.option("--seed", "random_state", type=int, default=None)
+@click.option("--debug", type=bool, is_flag=True)
+@click.option("--print-strands", type=bool, is_flag=True)
+def search_command(
+    init_strand_str: str,
+    apply_strand_str: str,
+    target_depth: int,
+    n_edits: int,
+    random_state: Optional[int] = None,
+    debug: bool = False,
+    print_strands: bool = False,
+) -> None:
+    set_logging_config(debug)
+
+    rng = np.random.default_rng(random_state)
+    init_strand = Strand.from_str(init_strand_str)
+    apply_strand = Strand.from_str(apply_strand_str)
+
+    Search.bfs(init_strand, apply_strand, target_depth, n_edits, rng, print_strands=print_strands)

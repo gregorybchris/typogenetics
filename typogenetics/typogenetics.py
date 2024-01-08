@@ -337,7 +337,7 @@ class Rewriter:
         copy_mode = False
 
         unit = Folder.get_binding_site(enzyme, strand)
-        logger.info(f"Rewriting strand {strand} with enzyme {enzyme}, unit={unit}")
+        logger.debug(f"Rewriting strand {strand} with enzyme {enzyme}, unit={unit}")
         if unit is None:
             return [strand]
 

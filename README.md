@@ -33,6 +33,9 @@ typo rewrite cop-mvl-mvr-swi-cut-rpy AATACTAAACCGA
 
 # Simulate many generations of evolution with a starting strand
 typo simulate ATAGCGAATAGGATAATG --iter 10000 --seed 42
+
+# Search for all strands that code for enzymes with similar function
+typo search ATAAACGATAATTGACAGAGCGAATG ATCGATAGGGAACATGTCGT --edits 5 --depth 20 --seed 42
 ```
 
 ## Resources
