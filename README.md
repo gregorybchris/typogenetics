@@ -2,11 +2,11 @@
 
 Implementation of the artificial evolutionary system described in Douglas Hofstadter's "Gödel, Escher, Bach".
 
-Typogenetics (or "typographical genetics") is a toy version of real biological genetics. It simplifies a lot about how real genetics works to provide some useful intuitions with only a few moving parts.
+Typogenetics (or "typographical genetics") is a toy model of biological genetics. It boils real biology down to a small set of concepts and rules to make the core principles of genetics more intuitive.
 
-**In computer terms**: You write a short program. The Typogenetics interpreter executes your program on some input you also provide and it produces some output. That output is guaranteed to be interpretable as another program. You can run that new program through the same interpreter. Given a good initial program, by running this execution in a loop we can hope to eventually produce a program that reproduces itself when interpreted.
+**In biological terms**: Strands of bases are translated into sequences of amino acids. Amino acid sequences are folded into enzymes that can operate on strands by mutating them. Applying enzymes to strands produces new strands. Those new strands can in turn be translated into even more amino acid sequences and enzymes. By evolving a population of enzymes we can search for an enzyme (or network of interacting enzymes) that constitutes a very rudimentary form of artificial life.
 
-**In biological terms**: Strands of bases are translated into sequences of amino acids. Amino acids are mapped to instructions. Instructions are applied to strands to produce new strands. This tangled hierarchy has the potential to enable the evolution of self-replicating enzymes.
+**In computer terms**: The Typogenetics interpreter executes a program on some input text. The output produced by the interpreter is some text that may itself be another valid program. If the output is a valid program, we can execute it using the same interpreter. If the output is not a valid program, we can still use that output as input text to a valid program. We can run this interpreter in a loop and search for a program that produces itself when given the right input.
 
 For the nitty gritty of the Typogenetics specification see [spec.md](spec.md)
 
