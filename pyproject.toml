@@ -1,41 +1,41 @@
-[tool.poetry]
-authors = ["Chris Gregory <christopher.b.gregory@gmail.com>"]
+[project]
+authors = [
+    { name = "Chris Gregory", email = "christopher.b.gregory@gmail.com" },
+]
 classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
+dependencies = ["click>=8.2.1", "numpy>=2.3.0"]
 description = "Artificial genetics simulation."
 keywords = ["artificial", "genetics", "simulation"]
-license = "Apache Software License"
 name = "typogenetics"
 readme = "README.md"
-repository = "https://github.com/gregorybchris/typogenetics"
+requires-python = ">=3.11"
 version = "0.1.0"
 
-[[tool.poetry.packages]]
-include = "typogenetics"
+[project.urls]
+Repository = "https://github.com/gregorybchris/typogenetics"
 
-[tool.poetry.dependencies]
-click = "^8.1.7"
-python = ">=3.9"
-numpy = "^1.26.3"
-
-[tool.poetry.group.dev.dependencies]
-black = "^23.12.1"
-mypy = "^1.8.0"
-pylint = "^3.0.3"
-pytest = "^7.4.3"
-
-[tool.poetry.scripts]
+[project.scripts]
 typo = "typogenetics.cli:main"
 
+[dependency-groups]
+dev = ["black>=25.1.0", "mypy>=1.16.0", "pylint>=3.3.7", "pytest>=8.4.0"]
+
+[tool.hatch.build.targets.sdist]
+include = ["typogenetics"]
+
+[tool.hatch.build.targets.wheel]
+include = ["typogenetics"]
+
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [tool.black]
 line-length = 120
