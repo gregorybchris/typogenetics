@@ -5,7 +5,7 @@ import click
 import numpy as np
 
 from typogenetics.search import Search
-from typogenetics.typogenetics import Enzyme, Rewriter, Strand, Translator
+from typogenetics.typogenetics import Enzyme, Folder, Rewriter, Strand, Translator
 
 logger = logging.getLogger(__name__)
 
@@ -101,3 +101,24 @@ def search_command(
     apply_strand = Strand.from_str(apply_strand_str)
 
     Search.bfs(init_strand, apply_strand, target_depth, n_edits, rng, print_strands=print_strands)
+
+
+@main.command(name="go")
+@click.option("--debug", type=bool, is_flag=True)
+def go_command(
+    debug: bool = False,
+) -> None:
+    set_logging_config(debug)
+
+    strand = Strand.from_str("CAAGGGTATACCCCATATCCT")
+    print(strand)
+
+    enzymes = Translator.translate(strand)
+    print(enzymes)
+
+    enzyme = enzymes[0]
+    unit = Folder.get_binding_site(enzyme, strand)
+    print(unit)
+
+    new_strands = Rewriter.rewrite(enzyme, strand)
+    print(new_strands)
