@@ -1,7 +1,7 @@
 import logging
 from enum import StrEnum, auto
 from queue import Queue
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 from numpy.random import Generator
@@ -25,12 +25,16 @@ class Editor:
     @classmethod
     def edit(cls, strand: Strand, rng: Generator) -> Strand:
         edit_type = cls.select_edit_type(rng)
-        if edit_type == EditType.MUTATE:
-            return cls.mutate(strand, rng)
-        if edit_type == EditType.INSERT:
-            return cls.insert(strand, rng)
-        if edit_type == EditType.DELETE:
-            return cls.delete(strand, rng)
+        match edit_type:
+            case EditType.MUTATE:
+                return cls.mutate(strand, rng)
+            case EditType.INSERT:
+                return cls.insert(strand, rng)
+            case EditType.DELETE:
+                return cls.delete(strand, rng)
+
+        msg = f"Unknown edit type: {edit_type}"
+        raise ValueError(msg)
 
     @classmethod
     def mutate(cls, strand: Strand, rng: Generator) -> Strand:
@@ -72,7 +76,9 @@ class Editor:
             if r <= prob:
                 return edit_type
             r -= prob
-        raise ValueError("Random number is not in range [0, 1]")
+
+        msg = "Random number is not in range [0, 1]"
+        raise ValueError(msg)
 
 
 class Search:
@@ -85,7 +91,7 @@ class Search:
         print_strands: bool = False,
     ) -> None:
         strands = [init_strand]
-        known_set = set([str(init_strand)])
+        known_set = {str(init_strand)}
         for _ in range(n_iterations):
             enzyme_strand = strands[rng.integers(0, len(strands))]
             enzymes = Translator.translate(enzyme_strand)
@@ -100,12 +106,11 @@ class Search:
                 known_set.add(str(strand))
 
         if print_strands:
-            print("Unique strands:")
             sorted_strands = sorted(known_set)
             for strand_str in sorted_strands:
-                print(f"- {strand_str}")
+                logger.info("Strand: %s", strand_str)
 
-        print(f"Discovered {len(known_set)} unique strands while simulating for {n_iterations} iterations")
+        logger.info("Discovered %d unique strands while simulating for %d iterations", len(known_set), n_iterations)
 
     @classmethod
     def get_largest_rewrite_strand(
@@ -116,29 +121,31 @@ class Search:
     ) -> Optional[Strand]:
         init_enzymes = Translator.translate(init_strand)
         if log_rewrite:
-            logger.info(f"init_strand was translated into the enzymes: {init_enzymes}")
+            logger.info("init_strand was translated into the enzymes: %s", init_enzymes)
         init_enzyme_lengths = [len(enzyme) for enzyme in init_enzymes]
         if len(init_enzyme_lengths) == 0:
             return None
         largest_init_enzyme = init_enzymes[np.argmax(init_enzyme_lengths)]
         if log_rewrite:
-            logger.info(f"The largest was {largest_init_enzyme}")
+            logger.info("The largest was: %s", largest_init_enzyme)
 
         strands = Rewriter.rewrite(largest_init_enzyme, apply_strand)
         if log_rewrite:
             logger.info(
-                f"When the largest enzyme was applied to {apply_strand}, the following strands were produced: {strands}"
+                "When the largest enzyme was applied to %s, the following strands were produced: %s",
+                apply_strand,
+                strands,
             )
         if len(strands) == 0:
             return None
         strand_lengths = [len(strand) for strand in strands]
         longest_strand = strands[np.argmax(strand_lengths)]
         if log_rewrite:
-            logger.info(f"The longest strand produced was: {longest_strand}")
+            logger.info("The longest strand produced was: %s", longest_strand)
         return longest_strand
 
     @classmethod
-    def bfs(
+    def bfs(  # noqa: PLR0913
         cls,
         init_strand: Strand,
         apply_strand: Strand,
@@ -160,14 +167,15 @@ class Search:
             return
 
         logger.info(
-            f"Will search for enzymes that produce {init_longest_rewrite_strand} "
-            f"when they are applied to {apply_strand}"
+            "Will search for enzymes that produce %s when they are applied to %s",
+            init_longest_rewrite_strand,
+            apply_strand,
         )
 
         seen_strands = set()
         valid_strands = set()
 
-        queue: Queue[Tuple[Strand, int]] = Queue()
+        queue: Queue[tuple[Strand, int]] = Queue()
         queue.put((init_strand, 0))
         while not queue.empty():
             curr_strand, depth = queue.get()
@@ -190,12 +198,13 @@ class Search:
                     queue.put((edited_strand, depth + 1))
 
         if print_strands:
-            print("Valid strands:")
             sorted_strands = sorted(valid_strands)
             for strand_str in sorted_strands:
-                print(f"- {strand_str}")
+                logger.info("Strand: %s", strand_str)
 
-        print(
-            f"Discovered {len(valid_strands)} valid strands while searching until "
-            f"depth {target_depth} and branching factor {n_edits}"
+        logger.info(
+            "Discovered %d valid strands while searching until depth %d and branching factor %d",
+            len(valid_strands),
+            target_depth,
+            n_edits,
         )

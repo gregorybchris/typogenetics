@@ -2,48 +2,31 @@
 authors = [
     { name = "Chris Gregory", email = "christopher.b.gregory@gmail.com" },
 ]
-classifiers = [
-    "Intended Audience :: Developers",
-    "Topic :: Software Development",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-]
-dependencies = ["click>=8.2.1", "numpy>=2.3.0"]
+dependencies = ["numpy>=2.3.0", "rich>=14.0.0", "typer>=0.16.0"]
 description = "Artificial genetics simulation."
 keywords = ["artificial", "genetics", "simulation"]
 name = "typogenetics"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 version = "0.1.0"
 
-[project.urls]
-Repository = "https://github.com/gregorybchris/typogenetics"
-
-[project.scripts]
-typo = "typogenetics.cli:main"
-
-[dependency-groups]
-dev = ["black>=25.1.0", "mypy>=1.16.0", "pylint>=3.3.7", "pytest>=8.4.0"]
-
-[tool.hatch.build.targets.sdist]
-include = ["typogenetics"]
-
-[tool.hatch.build.targets.wheel]
-include = ["typogenetics"]
+[tool.uv]
+dev-dependencies = [
+    "mypy>=1.16.0",
+    "pytest>=8.4.0",
+    "ruff>=0.11.13",
+    "semver>=3.0.4",
+]
 
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
-[tool.black]
-line-length = 120
+[project.urls]
+repository = "https://github.com/gregorybchris/typogenetics"
 
-[tool.isort]
-line_length = 120
-profile = "black"
-src_paths = "*"
+[project.scripts]
+typo = "typogenetics.cli:app"
 
 [tool.mypy]
 disallow_incomplete_defs = true
@@ -51,20 +34,51 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
 
-[tool.pylint.basic]
-good-names = ["f", "i"]
-notes = ["FIXME"]
+[tool.ruff]
+line-length = 120
+src = ["src"]
 
-[tool.pylint.format]
-max-line-length = 120
-
-[tool.pylint.messages_control]
-disable = [
-    "missing-function-docstring",
-    "missing-module-docstring",
-    "missing-class-docstring",
-    "logging-fstring-interpolation",
+[tool.ruff.lint]
+ignore = ["D100", "D104", "FIX002", "TD002", "TD003"]
+select = [
+    "A",
+    "ARG",
+    "B",
+    "BLE",
+    "C4",
+    "E",
+    "EM",
+    "ERA",
+    "F",
+    "FIX",
+    "G",
+    "I",
+    "ICN",
+    "ISC",
+    "LOG",
+    "N",
+    "PL",
+    "PT",
+    "PTH",
+    "PLR",
+    "RET",
+    "RUF",
+    "SIM",
+    "SLF",
+    "T20",
+    "TCH",
+    "TD",
+    "TID",
+    "W",
 ]
 
-[tool.pylint.reports]
-output-format = "colorized"
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.extend-per-file-ignores]
+"**/*.py" = ["A001", "A002"]
+"**/tests/**/*.py" = ["SLF", "PLR2004", "PLR6301"]
+"src/typogenetics/cli.py" = ["T201", "T203"]

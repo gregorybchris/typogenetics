@@ -7,7 +7,7 @@ from typogenetics.typogenetics import Strand
 class TestSearch:
     def test_select_edit_type(self) -> None:
         rng = np.random.default_rng(42)
-        assert Editor.select_edit_type(rng) == EditType.INSERT
+        assert Editor.select_edit_type(rng) == EditType.MUTATE
 
     def test_mutate(self) -> None:
         rng = np.random.default_rng(42)

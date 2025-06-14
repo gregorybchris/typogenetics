@@ -1,7 +1,7 @@
 import logging
 from dataclasses import dataclass
 from enum import StrEnum, auto
-from typing import Iterator, List, Optional, Tuple
+from typing import Iterator, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -70,12 +70,12 @@ class AminoAcid(StrEnum):
     LPU = auto()
 
 
-Duplet = Tuple[Base, Base]
+Duplet = tuple[Base, Base]
 
 
 @dataclass
 class Strand:
-    bases: List[Base]
+    bases: list[Base]
 
     @classmethod
     def from_str(cls, strand_str: str) -> "Strand":
@@ -115,7 +115,7 @@ class Strand:
 
 @dataclass
 class Enzyme:
-    amino_acids: List[AminoAcid]
+    amino_acids: list[AminoAcid]
 
     def iter_amino_acids(self) -> Iterator[AminoAcid]:
         yield from self.amino_acids
@@ -153,9 +153,9 @@ class Translator:
     """
 
     @classmethod
-    def translate(cls, strand: Strand) -> List[Enzyme]:
+    def translate(cls, strand: Strand) -> list[Enzyme]:
         enzymes = []
-        amino_acids: List[AminoAcid] = []
+        amino_acids: list[AminoAcid] = []
         for duplet in strand.iter_duplets():
             amino_acid = cls._translate_duplet(duplet)
             if amino_acid is None and len(amino_acids) > 0:
@@ -333,22 +333,22 @@ class Rewriter:
 
     # pylint: disable=too-many-branches
     @classmethod
-    def rewrite(cls, enzyme: Enzyme, strand: Strand) -> List[Strand]:
+    def rewrite(cls, enzyme: Enzyme, strand: Strand) -> list[Strand]:  # noqa: PLR0912, PLR0915
         copy_mode = False
 
         unit = Folder.get_binding_site(enzyme, strand)
-        logger.debug(f"Rewriting strand {strand} with enzyme {enzyme}, unit={unit}")
+        logger.debug("Rewriting strand %s with enzyme %s, unit=%s", strand, enzyme, unit)
         if unit is None:
             return [strand]
 
         pairs = [BasePair(base, None) for base in strand.iter_bases()]
 
-        logger.debug(f"Init @ {unit}, copy={copy_mode}")
+        logger.debug("Init @ %d, copy=%s", unit, copy_mode)
         logger.debug(cls.pairs_to_string(pairs))
 
         strands = []
         for amino_acid in enzyme.iter_amino_acids():
-            logger.debug(f"Applying {amino_acid} @ {unit}, copy={copy_mode}")
+            logger.debug("Applying %s @ %d, copy=%s", amino_acid, unit, copy_mode)
 
             if amino_acid == AminoAcid.CUT:
                 cut_pairs = pairs[unit + 1 :]
@@ -420,7 +420,7 @@ class Rewriter:
         return strands
 
     @classmethod
-    def strands_from_pairs(cls, pairs: List[BasePair]) -> List[Strand]:
+    def strands_from_pairs(cls, pairs: list[BasePair]) -> list[Strand]:
         strands = []
         bind_bases = []
         comp_bases = []
@@ -475,7 +475,7 @@ class Rewriter:
         }[amino_acid]
 
     @classmethod
-    def pairs_to_string(cls, pairs: List[BasePair]) -> str:
+    def pairs_to_string(cls, pairs: list[BasePair]) -> str:
         res = "[ "
         comp_map = {Base.A: "∀", Base.C: "Ↄ", Base.G: "⅁", Base.T: "⊥"}
         for pair in pairs:
