@@ -7,7 +7,7 @@ from rich.logging import RichHandler
 from typer import Argument, Option, Typer
 
 from typogenetics.search import Search
-from typogenetics.typogenetics import Enzyme, Folder, Rewriter, Strand, Translator
+from typogenetics.typogenetics import AminoAcid, Base, Enzyme, Folder, Rewriter, Strand, Translator
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +25,43 @@ def set_logger_config(info: bool, debug: bool) -> None:
         logging.basicConfig(level=logging.DEBUG, handlers=handlers, format=log_format)
 
 
+def amino_acid_to_console(amino_acid: AminoAcid) -> str:
+    color = "white"
+    if amino_acid in [AminoAcid.LPU, AminoAcid.LPY, AminoAcid.RPU, AminoAcid.RPY]:
+        color = "blue"
+    elif amino_acid in [AminoAcid.CUT, AminoAcid.DEL, AminoAcid.SWI]:
+        color = "red"
+    elif amino_acid in [AminoAcid.MVR, AminoAcid.MVL]:
+        color = "yellow"
+    elif amino_acid in [AminoAcid.INA, AminoAcid.INC, AminoAcid.ING, AminoAcid.INT]:
+        color = "green"
+    elif amino_acid in [AminoAcid.COP]:
+        color = "magenta"
+    elif amino_acid in [AminoAcid.OFF]:
+        color = "orange"
+    return f"[{color}]{amino_acid.value}[/]"
+
+
+def enzyme_to_console(enzyme: Enzyme) -> str:
+    return "[white]-[/]".join(amino_acid_to_console(amino_acid) for amino_acid in enzyme.iter_amino_acids())
+
+
+def base_to_console(base: Base) -> str:
+    match base:
+        case Base.C:
+            return "[green]C[/]"
+        case Base.G:
+            return "[blue]G[/]"
+        case Base.T:
+            return "[yellow]T[/]"
+        case Base.A:
+            return "[red]A[/]"
+
+
+def strand_to_console(strand: Strand) -> str:
+    return "".join(base_to_console(base) for base in strand.iter_bases())
+
+
 @app.command()
 def translate(
     strand_str: Annotated[str, Argument(...)],
@@ -36,7 +73,7 @@ def translate(
     strand = Strand.from_str(strand_str)
     enzymes = Translator.translate(strand)
     for enzyme in enzymes:
-        console.print(enzyme)
+        console.print(enzyme_to_console(enzyme))
 
 
 @app.command()
@@ -53,7 +90,7 @@ def rewrite(
     new_strands = Rewriter.rewrite(enzyme, strand)
     console.print("New strands:")
     for new_strand in new_strands:
-        console.print(f"- {new_strand}")
+        console.print(f"- {strand_to_console(new_strand)}")
 
 
 @app.command()
@@ -101,14 +138,14 @@ def go(
     set_logger_config(info, debug)
 
     strand = Strand.from_str("CAAGGGTATACCCCATATCCT")
-    console.print(strand)
+    console.print(f"Strand: {strand_to_console(strand)}")
 
     enzymes = Translator.translate(strand)
-    console.print(enzymes)
+    console.print(f"Enzymes: {', '.join(enzyme_to_console(enzyme) for enzyme in enzymes)}")
 
     enzyme = enzymes[0]
     unit = Folder.get_binding_site(enzyme, strand)
-    console.print(unit)
+    console.print(f"Binding site: {unit}")
 
     new_strands = Rewriter.rewrite(enzyme, strand)
-    console.print(new_strands)
+    console.print(f"New strands: {', '.join(strand_to_console(new_strand) for new_strand in new_strands)}")
