@@ -12,14 +12,12 @@ For the nitty gritty of the Typogenetics specification see [spec.md](spec.md)
 
 For some additional thoughts on ways to extend Typogenetics see [extensions.md](extensions.md)
 
-## Requirements
-
-- [Poetry](https://python-poetry.org/)
-
 ## Installation
 
+Install using [uv](https://docs.astral.sh/uv)
+
 ```bash
-poetry install
+uv sync
 ```
 
 ## Usage
